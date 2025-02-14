@@ -1,0 +1,6 @@
+.content {
+  margin-top: 64px; /* Altura del encabezado */
+  padding: 16px;
+  height: calc(100vh - 64px); /* Resta la altura del encabezado */
+  overflow: auto; /* Permite desplazamiento si es necesario */
+}

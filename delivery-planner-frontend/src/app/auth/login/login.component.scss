@@ -1,0 +1,19 @@
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+mat-card {
+  width: 400px;
+  padding: 24px;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+button {
+  width: 100%;
+}

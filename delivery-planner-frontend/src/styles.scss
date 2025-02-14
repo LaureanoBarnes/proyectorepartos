@@ -1,0 +1,24 @@
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+mat-toolbar {
+  margin-bottom: 20px;
+}
+.leaflet-container {
+  height: 300px;
+}
