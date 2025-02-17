@@ -26,13 +26,12 @@
             return httpSecurity
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(http -> http
-                            .requestMatchers("/api/public-endpoint").permitAll() // Permitir acceso público
+                            .requestMatchers("/auth/register", "/auth/login").permitAll()
                             .anyRequest().authenticated()
                     )
-                    .oauth2ResourceServer(oauth ->
-                            oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
-                    )
+                    .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .build();
         }
+
     }

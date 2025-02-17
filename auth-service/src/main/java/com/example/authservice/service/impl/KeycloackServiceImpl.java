@@ -9,6 +9,7 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -21,10 +22,8 @@ public class KeycloackServiceImpl implements IKeycloackService {
 
     @Override
     public List<UserRepresentation> findAllUsers() {
-        // Obtén el recurso de usuarios
-        UsersResource usersResource = KeycloackProvider.getUserResource();
-        // Retorna todos los usuarios del realm
-        return usersResource.list();
+        return KeycloackProvider.getRealmResource()
+                .users().list();
     }
 
     @Override
@@ -34,24 +33,20 @@ public class KeycloackServiceImpl implements IKeycloackService {
 
     @Override
     public List<UserRepresentation> searchUserByUsername(String username) {
-        // Obtén el recurso de usuarios
-        UsersResource usersResource = KeycloackProvider.getUserResource();
-        // Busca usuarios por nombre de usuario
-        return usersResource.search(username);
+        return KeycloackProvider.getRealmResource()
+                .users()
+                .searchByUsername(username, true);
     }
 
     @Override
     public String createUser(UserDTO userDTO) {
-        // Obtén el recurso de usuarios
         UsersResource usersResource = KeycloackProvider.getUserResource();
 
-        // Configura las credenciales del usuario
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(userDTO.getPassword());
         credential.setTemporary(false);
 
-        // Configura el usuario
         UserRepresentation user = new UserRepresentation();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
@@ -60,18 +55,37 @@ public class KeycloackServiceImpl implements IKeycloackService {
         user.setCredentials(Collections.singletonList(credential));
         user.setEnabled(true);
 
-        // Crea el usuario en Keycloak
+        // Lógica para asignar roles según el UserDTO
+        Set<String> rolesToAssign;
+        if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
+            // Si no hay roles, asigna el rol por defecto de cliente.
+            rolesToAssign = Set.of("cliente");
+        } else {
+            // Si hay roles, transforma la lista de roles a un Set<String> con los nombres exactos,
+            // asegurándote de usar la nomenclatura que Keycloak tiene definida.
+            rolesToAssign = KeycloackProvider.getRealmResource()
+                    .roles()
+                    .list()
+                    .stream()
+                    .filter(role -> userDTO.getRoles()
+                            .stream()
+                            .anyMatch(roleName -> roleName.equalsIgnoreCase(role.getName())))
+                    .map(RoleRepresentation::getName)
+                    .collect(Collectors.toSet());
+        }
+
         Response response = usersResource.create(user);
 
-        // Verifica si el usuario fue creado exitosamente
         if (response.getStatus() == 201) {
             String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-            assignRolesToUser(userId, userDTO.getRoles()); // Asigna roles al usuario
+            assignRolesToUser(userId, rolesToAssign);  // Asigna los roles al usuario
             return userId;
         } else {
             throw new RuntimeException("Error al crear el usuario: " + response.getStatusInfo().getReasonPhrase());
         }
     }
+
+
 
     @Override
     public void deleteUser(String userId) {
@@ -102,11 +116,10 @@ public class KeycloackServiceImpl implements IKeycloackService {
     }
 
     private void assignRolesToUser(String userId, Set<String> roles) {
-        // Obtén el recurso de usuarios
         UsersResource usersResource = KeycloackProvider.getUserResource();
 
-        // Obtén los roles del realm
-        List<RoleRepresentation> realmRoles = KeycloackProvider.getRealmResource()
+        // Obtén de Keycloak la lista de roles que coinciden con los nombres en el Set
+        List<RoleRepresentation> rolesRepresentation = KeycloackProvider.getRealmResource()
                 .roles()
                 .list()
                 .stream()
@@ -114,6 +127,6 @@ public class KeycloackServiceImpl implements IKeycloackService {
                 .collect(Collectors.toList());
 
         // Asigna los roles al usuario
-        usersResource.get(userId).roles().realmLevel().add(realmRoles);
+        usersResource.get(userId).roles().realmLevel().add(rolesRepresentation);
     }
 }
