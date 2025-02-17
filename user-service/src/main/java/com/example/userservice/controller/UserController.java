@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,10 +39,23 @@ public class UserController {
     // Crear un usuario
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
-        User user = new User(null, userCreateDTO.getNombre(), userCreateDTO.getApellido(), userCreateDTO.getEmail(), userCreateDTO.getRol());
+        User user = new User(
+                null,
+                userCreateDTO.getNombre(),
+                userCreateDTO.getApellido(),
+                userCreateDTO.getEmail(),
+                userCreateDTO.getRol()
+        );
         User createdUser = userService.createUser(user);
         return new ResponseEntity<>(userService.convertToDTO(createdUser), HttpStatus.CREATED);
     }
+
+    @GetMapping("/public")
+    public ResponseEntity<String> publicEndpoint() {
+        return ResponseEntity.ok("¡Este es un endpoint público!");
+    }
+
+
     @Operation(summary = "Obtener un usuario", description = "Busca y retorna un usuario por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
@@ -59,6 +73,7 @@ public class UserController {
     @Operation(summary = "Listar todos los usuarios", description = "Retorna la lista completa de usuarios")
     @ApiResponse(responseCode = "200", description = "Listado de usuarios")
     // Obtener todos los usuarios
+    @PreAuthorize("hasRole('admin_client_role')")
     @GetMapping
     public ResponseEntity<Page<UserDTO>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -67,7 +82,6 @@ public class UserController {
         Page<UserDTO> users = userService.getAllUsers(pageable);
         return ResponseEntity.ok(users);
     }
-
 
     @Operation(summary = "Actualizar un usuario", description = "Actualiza un usuario existente por su ID")
     @ApiResponses({

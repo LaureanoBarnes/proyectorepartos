@@ -17,7 +17,7 @@ public class RateLimitConfig {
 
     @Bean
     public LettuceBasedProxyManager<byte[]> proxyManager() {
-        RedisClient redisClient = RedisClient.create("redis://redis:6379");
+        RedisClient redisClient = RedisClient.create("redis://localhost:6379");
         return LettuceBasedProxyManager.builderFor(redisClient)
                 .build();
     }
