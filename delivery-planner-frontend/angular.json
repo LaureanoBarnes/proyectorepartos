@@ -34,7 +34,9 @@
   "styles": [
   "node_modules/leaflet/dist/leaflet.css",
   "node_modules/leaflet-draw/dist/leaflet.draw.css",
+  "node_modules/sweetalert2/src/sweetalert2.scss",
   "src/styles.scss"
+
 ],
   "scripts": [],
   "outputMode": "static",

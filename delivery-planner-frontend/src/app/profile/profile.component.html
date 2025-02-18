@@ -1,0 +1,57 @@
+<div class="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+  <div class="flex flex-col items-center">
+    <img
+      [src]="userProfile.photoURL || 'assets/default-avatar.png'"
+      alt="Foto de perfil"
+      class="w-24 h-24 rounded-full object-cover mb-4 border-4 border-blue-500"
+    />
+    <h2 class="text-2xl font-bold mb-2">{{ userProfile.nombre }} {{ userProfile.apellido }}</h2>
+    <p class="text-gray-600 mb-4">{{ userProfile.email }}</p>
+  </div>
+
+  <div class="space-y-4">
+    <div class="flex justify-between">
+      <span class="font-semibold">Nombre:</span>
+      <span>{{ userProfile.nombre }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Apellido:</span>
+      <span>{{ userProfile.apellido }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Email:</span>
+      <span>{{ userProfile.email }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Rol:</span>
+      <span>{{ userProfile.rol }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Teléfono:</span>
+      <span>{{ userProfile.telefono || 'No proporcionado' }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Dirección:</span>
+      <span>{{ userProfile.direccion || 'No proporcionada' }}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="font-semibold">Fecha de Registro:</span>
+      <span>{{ userProfile.fechaRegistro | date }}</span>
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-between">
+    <button
+      class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+      (click)="editProfile()"
+    >
+      Editar Perfil
+    </button>
+    <button
+      class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 transition ml-2"
+      (click)="changePassword()"
+    >
+      Cambiar Contraseña
+    </button>
+  </div>
+</div>

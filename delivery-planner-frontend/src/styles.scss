@@ -1,5 +1,9 @@
+@use 'sweetalert2/src/sweetalert2' as swal;
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -21,4 +25,30 @@ mat-toolbar {
 }
 .leaflet-container {
   height: 300px;
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .profile-field {
+    margin-bottom: 1rem;
+
+    strong {
+      margin-right: 0.5rem;
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: space-between;
+  }
 }

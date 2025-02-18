@@ -7,11 +7,22 @@
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="form-field">
           <mat-form-field appearance="outline">
-            <input matInput placeholder="Nombre" formControlName="name">
-            <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
+            <input matInput placeholder="Nombre" formControlName="nombre">
+            <mat-error *ngIf="registerForm.get('nombre')?.hasError('required')">
               Campo obligatorio
             </mat-error>
-            <mat-error *ngIf="registerForm.get('name')?.hasError('minlength')">
+            <mat-error *ngIf="registerForm.get('nombre')?.hasError('minlength')">
+              Mínimo 3 caracteres
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-field">
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Apellido" formControlName="apellido">
+            <mat-error *ngIf="registerForm.get('apellido')?.hasError('required')">
+              Campo obligatorio
+            </mat-error>
+            <mat-error *ngIf="registerForm.get('apellido')?.hasError('minlength')">
               Mínimo 3 caracteres
             </mat-error>
           </mat-form-field>
@@ -19,6 +30,9 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <input matInput placeholder="Email" formControlName="email">
+            <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+              Campo obligatorio
+            </mat-error>
             <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
               Formato de email inválido
             </mat-error>
@@ -27,6 +41,9 @@
         <div class="form-field">
           <mat-form-field appearance="outline">
             <input matInput type="password" placeholder="Contraseña" formControlName="password">
+            <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+              Campo obligatorio
+            </mat-error>
             <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
               Mínimo 6 caracteres
             </mat-error>

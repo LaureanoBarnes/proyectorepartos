@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:3000' // o la URL de tu API
+  apiBaseUrl: 'http://localhost:8080' // Cambiar a la URL correcta de auth-service
 };
